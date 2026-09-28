@@ -1,0 +1,60 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: corsair-void-battery
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.19"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked --dev
+
+      - name: Check formatting with Ruff
+        run: uv run --locked ruff format --check .
+
+      - name: Lint with Ruff
+        run: uv run --locked ruff check --output-format=github .
+
+      - name: Check typing with mypy
+        run: uv run --locked mypy
+
+      - name: Run unit tests with coverage
+        run: uv run --locked coverage run -m unittest discover -s tests -v
+
+      - name: Enforce overall coverage
+        run: uv run --locked coverage report
+
+      - name: Generate coverage XML
+        if: github.event_name == 'pull_request'
+        run: uv run --locked coverage xml
+
+      - name: Enforce coverage on changed code
+        if: github.event_name == 'pull_request'
+        run: uv run --locked diff-cover coverage.xml --compare-branch=origin/${{ github.base_ref }} --fail-under=75 --show-uncovered
