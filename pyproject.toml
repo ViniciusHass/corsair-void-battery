@@ -1,0 +1,52 @@
+[project]
+name = "corsair-void-battery"
+version = "0.1.0"
+description = "Read the battery level of a Corsair VOID Wireless V2 headset"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "hidapi>=0.15.0",
+    "pillow>=12.3.0",
+    "pystray>=0.19.5",
+]
+
+[project.optional-dependencies]
+icue = [
+    "cuesdk>=4.0.84",
+]
+build = [
+    "pyinstaller>=6.22.3",
+]
+
+[project.scripts]
+corsair-void-battery = "corsair_void_battery:main"
+
+[build-system]
+requires = ["uv_build>=0.12.7,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.1",
+    "ruff>=0.16.9",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_ignores = true
