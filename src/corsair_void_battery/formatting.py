@@ -58,17 +58,12 @@ def print_probe(result: ProbeResult, *, diagnostic: bool = False) -> None:
             f"\nProbe PID={hex_value(result.product_id)} "
             f"interface={result.interface_number} usage_page={hex_value(result.usage_page)}"
         )
-        for index, (source, report) in enumerate(
-            zip(result.report_sources, result.v2_reports, strict=True), start=1
-        ):
+        for index, (source, report) in enumerate(zip(result.report_sources, result.v2_reports, strict=True), start=1):
             print(f"  report {index} ({source}): {report_text(report)}")
 
     if result.battery_percent is not None:
         if diagnostic:
-            print(
-                f"  battery: {result.battery_percent}% "
-                f"(raw={result.battery_raw}, protocol={result.battery_protocol})"
-            )
+            print(f"  battery: {result.battery_percent}% (raw={result.battery_raw}, protocol={result.battery_protocol})")
         else:
             print(f"Corsair VOID Wireless V2 battery: {result.battery_percent}%")
     elif result.error:

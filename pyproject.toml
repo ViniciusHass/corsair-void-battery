@@ -31,20 +31,39 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "coverage>=7.16.2",
+    "diff-cover>=10.6.0",
     "mypy>=2.3.1",
     "ruff>=0.16.9",
 ]
 
 [tool.ruff]
 target-version = "py312"
-line-length = 100
+line-length = 127
 src = ["src"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM"]
+select = ["E", "F", "I", "UP", "B", "SIM", "C90"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.coverage.run]
+branch = true
+source = ["corsair_void_battery"]
+relative_files = true
+
+[tool.coverage.report]
+fail_under = 75
+show_missing = true
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+tag_format = "v{version}"
+build_command = "python -m pip install uv && uv lock"
 
 [tool.mypy]
 python_version = "3.12"

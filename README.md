@@ -127,6 +127,91 @@ headset did not answer the V2 battery request. Make sure the headset is powered
 on and paired to the dongle. The receiver can still enumerate on Windows while
 its vendor battery endpoint is unavailable.
 
+## Commits and releases
+
+Commit messages should use [Conventional Commits](https://www.conventionalcommits.org/).
+Semantic Versioning (SemVer) applies to release numbers, not directly to commit
+messages. The commit format is:
+
+```text
+<type>[optional scope]: <description>
+```
+
+Examples:
+
+```text
+fix(hid): handle a disconnected receiver
+feat(tray): add a refresh menu item
+docs: explain the release process
+test(protocol): cover a new battery report
+```
+
+The commit type communicates the intended SemVer change:
+
+- `fix:` normally produces a PATCH release, such as `0.1.1`.
+- `feat:` normally produces a MINOR release, such as `0.2.0`.
+- A `!` after the type or scope, or a `BREAKING CHANGE:` footer, produces a
+  MAJOR release, such as `1.0.0`.
+- `docs:`, `test:`, `refactor:`, `chore:`, and `ci:` normally do not create a
+  release unless they include a breaking change.
+
+### Automatic releases on `main`
+
+[Python Semantic Release](https://python-semantic-release.readthedocs.io/) can
+read these commit messages and, after a change reaches `main`:
+
+1. Determine the next SemVer version.
+2. Update `project.version` in `pyproject.toml`.
+3. Update the changelog.
+4. Commit the version change.
+5. Create a tag such as `v0.2.0`.
+6. Create a GitHub release.
+
+The project configuration for this tool is:
+
+```toml
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+tag_format = "v{version}"
+build_command = "python -m pip install uv && uv lock"
+```
+
+The release workflow runs only after changes reach `main` and needs
+`contents: write` permission. It is stored in
+`.github/workflows/release.yml` and has this core structure:
+
+```yaml
+name: Release
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: python-semantic-release/python-semantic-release@v10.7.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          push: "true"
+          tag: "true"
+          vcs_release: "true"
+```
+
+The validation workflow checks every change; this separate release workflow
+makes a version commit and tag only on `main`. The existing `v0.1.0` tag is the
+initial release baseline. Make sure it is pushed to GitHub before the first
+automatic release if it is not already there:
+
+```powershell
+git push origin v0.1.0
+```
+
 ## License
 
 Licensed under the [MIT License](LICENSE). You may use, copy, modify, and

@@ -13,9 +13,7 @@ from .protocol import enumerate_devices, is_v2_candidate, probe_v2
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Enumerate and probe a Corsair VOID Wireless V2 HID receiver."
-    )
+    parser = argparse.ArgumentParser(description="Enumerate and probe a Corsair VOID Wireless V2 HID receiver.")
     parser.add_argument(
         "--icue",
         action="store_true",
@@ -120,9 +118,7 @@ def _run_once(args: argparse.Namespace) -> tuple[int, str]:
             print_probe(probe_result, diagnostic=True)
 
     if hid_succeeded:
-        percent = next(
-            result.battery_percent for result in results if result.battery_percent is not None
-        )
+        percent = next(result.battery_percent for result in results if result.battery_percent is not None)
         return 0, battery_status(percent)
     if not results:
         return 1, "Corsair VOID Wireless V2 receiver not found"
@@ -167,8 +163,7 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.timeout <= 0 or args.listen_ms < 0 or args.retry_seconds <= 0 or args.watch <= 0:
         print(
-            "--timeout, --watch, and --retry-seconds must be positive; "
-            "--listen-ms cannot be negative",
+            "--timeout, --watch, and --retry-seconds must be positive; --listen-ms cannot be negative",
             file=sys.stderr,
         )
         raise SystemExit(2)
