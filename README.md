@@ -126,3 +126,8 @@ If the output says `Battery unavailable`, the receiver was found but the
 headset did not answer the V2 battery request. Make sure the headset is powered
 on and paired to the dongle. The receiver can still enumerate on Windows while
 its vendor battery endpoint is unavailable.
+
+## License
+
+Licensed under the [MIT License](LICENSE). You may use, copy, modify, and
+distribute this project subject to the license terms.

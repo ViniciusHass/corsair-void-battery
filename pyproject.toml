@@ -3,6 +3,10 @@ name = "corsair-void-battery"
 version = "0.1.0"
 description = "Read the battery level of a Corsair VOID Wireless V2 headset"
 readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Vinicius Hass", email = "viniciushass50@outlook.com" },
+]
 requires-python = ">=3.14"
 dependencies = [
     "hidapi>=0.15.0",
